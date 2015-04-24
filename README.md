@@ -1,2 +1,2 @@
-# puresec-detect-mock
-mock implementation of detection api
+# puresec-detect-mock microservice
+mock implementation of detection microservice
