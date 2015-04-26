@@ -37,14 +37,14 @@ var register = function(url, urlMaster, registrationInterval, alertInterval, sta
         } else {
             console.log("error during registration", error, "\nretry ..");
             setTimeout(function() {
-                register(url, urlMaster, registrationInterval, alertInterval);
+                register(url, urlMaster, registrationInterval, alertInterval, startAlertLoop);
             }, registrationInterval * 1000);
         }
     });
 };
 
 var registerAndContinuouslyAlertMaster = function(url, urlMaster, registrationInterval, alertInterval) {
-    register(url, urlMaster, registrationInterval, alertInterval, function (registrationId) {
+    register(url, urlMaster, registrationInterval, alertInterval, function(registrationId) {
         console.log("\nstarting alert loop (each %s seconds)", alertInterval);
 
         setInterval(function() {

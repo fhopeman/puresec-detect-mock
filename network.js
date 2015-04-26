@@ -8,7 +8,7 @@ var currentCallbackAddress = function() {
         for (var i = 0; i < interface.length; i++) {
             var name = interface[i];
             if (name.address !== '127.0.0.1' && name.family === 'IPv4' && !name.internal) {
-                return name.address;
+                return "http://" + name.address;
             }
         }
     }
