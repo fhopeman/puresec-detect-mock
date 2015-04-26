@@ -14,7 +14,7 @@ app.get("/health", function(req, res) {
     res.send("OK");
 });
 
-var server = app.listen(port, function() {
+app.listen(port, function() {
     var url = network.currentCallbackAddress() + ":" + port;
     console.log("detect dummy microservice listening at '%s'", url);
 
