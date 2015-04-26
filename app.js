@@ -1,5 +1,7 @@
 var express = require("express");
 var master = require("./master.js");
+var network = require("./network.js");
+
 var app = express();
 
 var urlMaster = process.env.MASTER_URL || process.argv[2] || "http://192.168.178.23:3000";
@@ -8,12 +10,12 @@ var registrationInterval = process.env.MASTER_REGISTRATION_INTERVAL || process.a
 var port = process.env.PORT || process.argv[5] || 3001;
 
 app.get("/health", function(req, res) {
-    console.log("health: OK");
+    console.log("\nhealth: OK");
     res.send("OK");
 });
 
 var server = app.listen(port, function() {
-    var url = server.address().address + ":" + server.address().port;
+    var url = network.currentCallbackAddress() + ":" + port;
     console.log("detect dummy microservice listening at '%s'", url);
 
     master.registerAndContinouslyAlert(url, urlMaster, registrationInterval, alertInterval);
