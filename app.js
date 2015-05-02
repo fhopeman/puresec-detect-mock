@@ -4,7 +4,7 @@ var network = require("./network.js");
 
 var app = express();
 
-var urlMaster = process.env.MASTER_URL || process.argv[2] || "http://192.168.178.23:3000";
+var urlMaster = process.env.MASTER_URL || process.argv[2] || "http://localhost:3000";
 var alertInterval = process.env.MASTER_ALERT_INTERVAL || process.argv[3] || 20;
 var registrationInterval = process.env.MASTER_REGISTRATION_INTERVAL || process.argv[4] || 5;
 var port = process.env.PORT || process.argv[5] || 3001;
