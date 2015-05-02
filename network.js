@@ -17,4 +17,3 @@ var currentCallbackAddress = function() {
 module.exports = {
     currentCallbackAddress: currentCallbackAddress
 };
-// ! TODO
