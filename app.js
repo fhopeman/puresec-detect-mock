@@ -1,6 +1,6 @@
 var express = require("express");
 var master = require("./master.js");
-var network = require("./network.js");
+var puresecMicroservice = require("puresec-microservice-js");
 
 var app = express();
 
@@ -15,7 +15,7 @@ app.get("/health", function(req, res) {
 });
 
 app.listen(port, function() {
-    var url = network.currentCallbackAddress() + ":" + port;
+    var url = puresecMicroservice.currentAddress() + ":" + port;
     console.log("detect dummy microservice listening at '%s'", url);
 
     master.registerAndContinouslyAlert(url, urlMaster, registrationInterval, alertInterval);
