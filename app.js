@@ -1,4 +1,5 @@
 var express = require("express");
+var request = require("request");
 var puresecMicroservice = require("puresec-microservice-js");
 
 var app = express();
@@ -45,8 +46,8 @@ app.listen(port, function() {
     var master = puresecMicroservice.master(urlMaster);
 
     var registerOptions = {
-        name: "Mock Handler 1",
-        description: "Mock implementation of handler",
+        name: "Mock Detector 1",
+        description: "Mock implementation of detector",
         type: "detector",
         address: urlClient,
         onSuccess: function(jsonBody) {
