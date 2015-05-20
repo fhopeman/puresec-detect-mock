@@ -3,17 +3,16 @@ var request = require("request");
 var puresecMicroservice = require("puresec-microservice-js");
 
 var app = express();
+var pmsUtils = puresecMicroservice.utils();
 
 var urlMaster = process.env.MASTER_URL || process.argv[2] || "http://localhost:3000";
 var alertInterval = process.env.MASTER_ALERT_INTERVAL || process.argv[3] || 300;
 var registrationInterval = process.env.MASTER_REGISTRATION_INTERVAL || process.argv[4] || 5;
 var port = process.env.PORT || process.argv[5] || 3001;
 
-app.get("/health", function(req, res) {
-    console.log("\nhealth: OK");
-    res.send("OK");
+pmsUtils.addHealthCheck(app, function() {
+    console.log("health: UP");
 });
-
 
 var triggerAlarm = function(urlMaster, registrationId) {
     console.log("\ntriggering alarm ..");
@@ -42,7 +41,7 @@ var startAlertingLoop = function(registrationId) {
 };
 
 app.listen(port, function() {
-    var urlClient = puresecMicroservice.utils().currentAddress() + ":" + port;
+    var urlClient = pmsUtils.currentAddress() + ":" + port;
     var master = puresecMicroservice.master(urlMaster);
 
     var registerOptions = {
