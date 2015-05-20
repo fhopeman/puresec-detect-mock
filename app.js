@@ -1,5 +1,4 @@
 var express = require("express");
-var request = require("request");
 var logger = require('winston');
 var puresecMicroservice = require("puresec-microservice-js");
 
