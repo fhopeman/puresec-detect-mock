@@ -1,5 +1,6 @@
 var express = require("express");
 var request = require("request");
+var logger = require('winston');
 var puresecMicroservice = require("puresec-microservice-js");
 
 var app = express();
@@ -11,11 +12,11 @@ var registrationInterval = process.env.MASTER_REGISTRATION_INTERVAL || process.a
 var port = process.env.PORT || process.argv[5] || 3001;
 
 pmsUtils.addHealthCheck(app, function() {
-    console.log("health: UP");
+    logger.info("health: UP");
 });
 
 var triggerAlarm = function(urlMaster, registrationId) {
-    console.log("\ntriggering alarm ..");
+    logger.info("\ntriggering alarm ..");
 
     request({
         uri: urlMaster + "/alarm/notify",
@@ -25,15 +26,15 @@ var triggerAlarm = function(urlMaster, registrationId) {
         }
     }, function(error, _, body) {
         if (!error) {
-            console.log("result:", body);
+            logger.info("result:", body);
         } else {
-            console.log("error during alarm notification", error);
+            logger.error("error during alarm notification", error);
         }
     });
 };
 
 var startAlertingLoop = function(registrationId) {
-    console.log("\nstarting alert loop (each %s seconds)", alertInterval);
+    logger.info("\nstarting alert loop (each %s seconds)", alertInterval);
 
     setInterval(function() {
         triggerAlarm(urlMaster, registrationId);
@@ -50,11 +51,11 @@ app.listen(port, function() {
         type: "detector",
         address: urlClient,
         onSuccess: function(jsonBody) {
-            console.log("result: ", jsonBody);
+            logger.info("result: ", jsonBody);
             startAlertingLoop(jsonBody.id);
         },
         onError: function(error) {
-            console.log("error during registration", error, "\nretry ..");
+            logger.error("error during registration", error, "\nretry ..");
             setTimeout(function() {
                 master.register(registerOptions);
             }, registrationInterval * 1000);
@@ -62,6 +63,6 @@ app.listen(port, function() {
     };
 
     // register
-    console.log("try to register ..");
+    logger.info("try to register ..");
     master.register(registerOptions);
 });

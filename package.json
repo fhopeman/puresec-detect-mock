@@ -23,6 +23,7 @@
   "homepage": "https://github.com/fhopeman/puresec-detect-mock#readme",
   "dependencies": {
     "express": "^4.12.3",
+    "winston": "^1.0.0",
     "puresec-microservice-js": "git://github.com/fhopeman/puresec-microservice-js.git"
   }
 }
