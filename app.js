@@ -3,31 +3,29 @@ var request = require("request");
 var logger = require('winston');
 var puresecMicroservice = require("puresec-microservice-js");
 
-var app = express();
-var pmsUtils = puresecMicroservice.utils();
-
 var urlMaster = process.env.MASTER_URL || process.argv[2] || "http://localhost:3000";
 var alertInterval = process.env.MASTER_ALERT_INTERVAL || process.argv[3] || 300;
 var registrationInterval = process.env.MASTER_REGISTRATION_INTERVAL || process.argv[4] || 5;
 var port = process.env.PORT || process.argv[5] || 3001;
 
-pmsUtils.addHealthCheck(app, function() {
+var app = express();
+var master = puresecMicroservice.master(urlMaster);
+var utils = puresecMicroservice.utils();
+var webApp = puresecMicroservice.webApp();
+
+webApp.registerHealthCheckEndpoint(app, function() {
     logger.info("health: UP");
 });
 
-var triggerAlarm = function(urlMaster, registrationId) {
+var triggerAlarm = function(master, registrationId) {
     logger.info("\ntriggering alarm ..");
 
-    request({
-        uri: urlMaster + "/alarm/notify",
-        method: "POST",
-        form: {
-            detector_id: registrationId
-        }
-    }, function(error, _, body) {
-        if (!error) {
+    master.notify({
+        registrationId: registrationId,
+        onSuccess: function() {
             logger.info("result:", body);
-        } else {
+        },
+        onError: function() {
             logger.error("error during alarm notification", error);
         }
     });
@@ -42,8 +40,7 @@ var startAlertingLoop = function(registrationId) {
 };
 
 app.listen(port, function() {
-    var urlClient = pmsUtils.currentAddress() + ":" + port;
-    var master = puresecMicroservice.master(urlMaster);
+    var urlClient = utils.currentAddress() + ":" + port;
 
     var registerOptions = {
         name: "Mock Detector 1",
