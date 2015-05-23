@@ -39,13 +39,11 @@ var startAlertingLoop = function(registrationId) {
 };
 
 app.listen(port, function() {
-    var urlClient = utils.currentAddress() + ":" + port;
-
     var registerOptions = {
         name: "Mock Detector 1",
         description: "Mock implementation of detector",
         type: "detector",
-        address: urlClient,
+        address: utils.currentAddress(port),
         onSuccess: function(jsonBody) {
             logger.info("result: ", jsonBody);
             startAlertingLoop(jsonBody.id);
