@@ -3,7 +3,7 @@ var logger = require('winston');
 var puresecMicroservice = require("puresec-microservice-js");
 
 var urlMaster = process.env.MASTER_URL || process.argv[2] || "http://localhost:3000";
-var alertInterval = process.env.MASTER_ALERT_INTERVAL || process.argv[3] || 300;
+var alertInterval = process.env.MASTER_ALERT_INTERVAL || process.argv[3] || 10;
 var registrationInterval = process.env.MASTER_REGISTRATION_INTERVAL || process.argv[4] || 5;
 var port = process.env.PORT || process.argv[5] || 3001;
 
@@ -16,15 +16,15 @@ webApp.registerHealthCheckEndpoint(app, function() {
     logger.info("health: UP");
 });
 
-var triggerAlarm = function(master, registrationId) {
+var triggerAlarm = function(registrationId) {
     logger.info("\ntriggering alarm ..");
 
     master.notify({
         registrationId: registrationId,
-        onSuccess: function() {
-            logger.info("result:", body);
+        onSuccess: function(jsonBody) {
+            logger.info("result:", jsonBody);
         },
-        onError: function() {
+        onError: function(error) {
             logger.error("error during alarm notification", error);
         }
     });
@@ -34,7 +34,7 @@ var startAlertingLoop = function(registrationId) {
     logger.info("\nstarting alert loop (each %s seconds)", alertInterval);
 
     setInterval(function() {
-        triggerAlarm(urlMaster, registrationId);
+        triggerAlarm(registrationId);
     }, alertInterval * 1000);
 };
 
