@@ -15,3 +15,6 @@ other dependencies which are mandatory.
 Run the following command to start the microservice:
 
 `node src/app.js`
+
+## Contribution
+Feel free to contribute!
